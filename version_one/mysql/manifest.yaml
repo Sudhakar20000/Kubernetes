@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql
+  namespace: flipkart
+type: Opaque
+data:
+  MYSQL_ALLOW_EMPTY_PASSWORD: "eWVzCg=="
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: db
+    component: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: db
+      component: mysql
+  # Pod
+  template:
+    metadata:
+      labels:
+        project: flipkart
+        tier: db
+        component: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: sudhakar20000/mysql:v1
+        args: ["--mysql-native-password=ON"]
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "RoboShop@1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: db
+    component: mysql
+spec:
+  selector:
+    project: flipkart
+    tier: db
+    component: mysql
+  ports:
+    - protocol: TCP
+      port: 3306 # service port
+      targetPort: 3306 # container port

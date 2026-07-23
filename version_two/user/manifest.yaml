@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user
+  namespace: flipkart
+data:
+  REDIS_URL: 'redis://redis:6379'
+  MONGO_URL: "mongodb://mongodb:27017/users"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: backend
+    component: user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: backend
+      component: user
+  template:
+    metadata:
+      labels:
+        project: flipkart
+        tier: backend
+        component: user
+    spec:
+      containers:
+      - name: user
+        image: sudhakar20000/user:v1
+        envFrom:
+        - configMapRef:
+            name: user
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            requests:
+            cpu: "100m"
+            memory: "128Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: user
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: backend
+    component: user
+spec:
+  selector:
+    project: flipkart
+    tier: backend
+    component: user
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: user
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: backend
+    component: user
+spec:
+  # deployment reference
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: user
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+
+
+
+

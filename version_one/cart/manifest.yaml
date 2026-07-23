@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cart
+  namespace: flipkart
+data:
+  REDIS_HOST: redis
+  CATALOGUE_HOST: catalogue
+  CATALOGUE_PORT: "8080"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: backend
+    component: cart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: backend
+      component: cart
+  # Pod
+  template:
+    metadata:
+      labels:
+        project: flipkart
+        tier: backend
+        component: cart
+    spec:
+      containers:
+      - name: cart
+        image: sudhakar20000/cart:v1
+        envFrom:
+        - configMapRef:
+            name: cart
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: backend
+    component: cart
+spec:
+  selector:
+    project: flipkart
+    tier: backend
+    component: cart
+  ports:
+    - protocol: TCP
+      port: 8080 # service port
+      targetPort: 8080 # container port

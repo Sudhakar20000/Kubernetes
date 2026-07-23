@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-headless
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: db
+    component: mongodb
+spec:
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017
+  clusterIP: None
+  selector:
+    project: flipkart
+    tier: db
+    component: mongodb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: db
+    component: mongodb
+spec: 
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017
+  selector:
+    project: flipkart
+    tier: db
+    component: mongodb
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: db
+    component: mongodb   
+spec:
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: db
+      component: mongodb
+  serviceName: "mongodb-headless"
+  replicas: 1
+  template:
+    metadata: 
+      labels: 
+        project: flipkart
+        tier: db
+        component: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: sudhakar20000/mongodb:v1
+        volumeMounts:
+        - name: mongodb
+          mountPath: /data/db
+  # PVC
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "flipkart-ebs"
+      resources:
+        requests:
+          storage: 1Gi
+
+  

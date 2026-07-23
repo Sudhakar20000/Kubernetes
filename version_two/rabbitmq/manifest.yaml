@@ -1,0 +1,97 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: headless-rabbitmq
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: db
+    component: rabbitmq
+spec:
+  clusterIP: None
+  selector:
+    project: flipkart
+    tier: db
+    component: rabbitmq
+  ports:
+    - protocol: TCP
+      port: 5672 # service port
+      targetPort: 5672 # container port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: db
+    component: rabbitmq
+spec:
+  selector:
+    project: flipkart
+    tier: db
+    component: rabbitmq
+  ports:
+    - protocol: TCP
+      port: 5672 # service port
+      targetPort: 5672 # container port
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rabbitmq
+  namespace: flipkart
+
+type: Opaque
+data:
+  RABBITMQ_DEFAULT_USER: cm9ib3Nob3AK
+  RABBITMQ_DEFAULT_PASS: cm9ib3Nob3AxMjMK
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+  namespace: flipkart
+  # labels related to deployment resource
+  labels:
+    project: flipkart
+    tier: db
+    component: rabbitmq
+spec:
+  serviceName: headless-rabbitmq
+  replicas: 1
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: db
+      component: rabbitmq
+  # Pod
+  template:
+    metadata:
+      labels:
+        project: flipkart
+        tier: db
+        component: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3
+        envFrom:
+        - secretRef:
+            name: rabbitmq
+        volumeMounts:
+          - name: rabbitmq
+            mountPath: /var/lib/rabbitmq
+  # PVC
+  volumeClaimTemplates:
+  - metadata:
+      name: rabbitmq
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "flipkart-ebs"
+      resources:
+        requests:
+          storage: 1Gi
+
