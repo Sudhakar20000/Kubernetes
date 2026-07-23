@@ -8,5 +8,5 @@ metadata:
 managedNodeGroups:
   - name: managed
     instanceTypes: ["t3.small"]
-    desiredCapacity: 1
+    desiredCapacity: 3
     spot: false
