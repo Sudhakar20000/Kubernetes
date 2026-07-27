@@ -27,7 +27,7 @@ spec:
       - name: shipping
         image:  "{{ .Values.deployment.imageRepo }}:{{ .Values.deployment.imageVersion}}"
         ports:
-          containerPort: 8080
+        - containerPort: 8080
         envFrom:
         - configMapRef:
             name: shipping
