@@ -3,4 +3,4 @@ secret:
   rabbitmq_password: cm9ib3Nob3AxMjMK
 statefulset:
   replicas: 1
-  imageVersion: v1
+  imageVersion: 3
