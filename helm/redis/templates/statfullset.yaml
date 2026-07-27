@@ -9,7 +9,7 @@ metadata:
     component: redis
 spec: 
   serviceName: headless-redis
-  replicas: {{ Values.statefulset.replicas}}
+  replicas: {{ Values.statefulset.replicas }}
   selector:
     matchLabels:
       project: flipkart
