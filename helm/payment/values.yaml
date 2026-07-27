@@ -9,5 +9,5 @@ deployment:
 hpa:
   avgcpu: 50
 secret:
-   cm9ib3Nob3AK
-   cm9ib3Nob3AxMjMK
+  rabbitmq_username: cm9ib3Nob3AK
+  rabbitmq_password: cm9ib3Nob3AxMjMK
