@@ -10,7 +10,7 @@ metadata:
     component: rabbitmq
 spec:
   serviceName: headless-rabbitmq
-  replicas: {{ Values.statefulset.replicas }}
+  replicas: {{ .Values.statefulset.replicas }}
   selector:
     matchLabels:
       project: flipkart
