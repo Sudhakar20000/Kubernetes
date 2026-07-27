@@ -9,7 +9,7 @@ metadata:
     tier: frontend
     component: frontend
 spec:
-  replicas: {{ Values.deployment.replicas }}
+  replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
       project: flipkart
