@@ -1,0 +1,6 @@
+secret:
+  rabbitmq_username: cm9ib3Nob3AK
+  rabbitmq_password: cm9ib3Nob3AxMjMK
+statefulset:
+  replicas: 1
+  imageVersion: v1

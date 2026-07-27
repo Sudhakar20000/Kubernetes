@@ -1,0 +1,13 @@
+configmap:
+  rabbitmq_host: rabbitmq
+  cart_host: cart
+  user_host: user
+deployment:
+  replicas: 1
+  imageRepo: sudhakar20000/payment
+  imageVersion: v1
+hpa:
+  avgcpu: 50
+secret:
+   cm9ib3Nob3AK
+   cm9ib3Nob3AxMjMK

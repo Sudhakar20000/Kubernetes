@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment
+  namespace: flipkart
+data:
+  CART_HOST: {{ .Values.configmap.rabbitmq_host }}
+  CART_PORT: "8080"
+  USER_HOST: {{ .Values.configmap.rabbitmq_host }}
+  USER_PORT: "8080"
+  AMQP_HOST: {{ .Values.configmap.rabbitmq_host }}
+  

@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: db
+    component: mysql
+spec:
+  serviceName: headless-mysql
+  replicas: {{ .Values.statefulset.replicas }}
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: db
+      component: mysql
+  # Pod
+  template:
+    metadata:
+      labels:
+        project: flipkart
+        tier: db
+        component: mysql
+    spec: 
+      containers:
+      - name: mysql
+        image: "{{ .Values.statefulset.imageRepo }}:{{ .Values.statefulset.imageVersion}}"
+        args: ["--mysql-native-password=ON"]
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "RoboShop@1"
+        volumeMounts:
+          - name: mysql
+            mountPath: /var/lib/mysql
+  # PVC
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "flipkart-ebs"
+      resources:
+        requests:
+          storage: 1Gi  

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: flipkart
+  # labels related to deployment resource
+  labels:
+    project: flipkart
+    tier: frontend
+    component: frontend
+spec:
+  replicas: {{ Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: frontend
+      component: frontend
+  # Pod
+  template:
+    metadata:
+      labels:
+        project: flipkart
+        tier: frontend
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image:  "{{ .Values.deployment.imageRepo }}:{{ .Values.deployment.imageVersion}}"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "100m"
+            memory: "128Mi"
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+          readOnly: true
+      # This is pod level, it is like adding the disk to the pod
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx
+          items:
+          - key: nginx.conf
+            path: nginx.conf

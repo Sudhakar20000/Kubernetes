@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cart
+  namespace: flipkart
+data:
+  REDIS_HOST: {{ .Values.configmap.redis_host }}
+  CATALOGUE_HOST: {{ .Values.configmap.catlogue_host }}
+  CATALOGUE_PORT: "8080"
+  

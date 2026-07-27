@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping
+  namespace: flipkart
+  # labels related to deployment resource
+  labels:
+    project: flipkart
+    tier: backend
+    component: shipping
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: backend
+      component: shipping
+  # Pod
+  template:
+    metadata:
+      labels:
+        project: flipkart
+        tier: backend
+        component: shipping
+    spec:
+      containers:
+      - name: shipping
+        image:  "{{ .Values.deployment.imageRepo }}:{{ .Values.deployment.imageVersion}}"
+        ports:
+          containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: shipping
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "1000m"
+            memory: "128Mi"

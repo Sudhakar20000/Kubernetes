@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: backend
+    component: cart
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: backend
+      component: cart
+  # Pod
+  template:
+    metadata:
+      labels:
+        project: flipkart
+        tier: backend
+        component: cart
+    spec:
+      containers:
+      - name: cart
+        image: "{{ .Values.deployment.imageRepo }}:{{ .Values.deployment.imageVersion}}"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "100m"
+            memory: "128Mi"
+        envFrom:
+        - configMapRef:
+            name: cart
+

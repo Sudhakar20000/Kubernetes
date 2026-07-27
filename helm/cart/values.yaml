@@ -1,0 +1,9 @@
+configmap:
+  catalogue_host: catalogue
+  redis_host: redis
+deployment:
+  replicas: 1
+  imageRepo: sudhakar20000/cart
+  imageVersion: v1
+hpa:
+  avgcpu: 50

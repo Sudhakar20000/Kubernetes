@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: 
+  name: redis
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: db
+    component: redis
+spec: 
+  serviceName: headless-redis
+  replicas: {{ Values.statefulset.replicas}}
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: db
+      component: redis
+  template:
+    metadata:
+      labels:
+        project: flipkart
+        tier: db
+        component: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:{{ .Values.statefulset.imageVersion }}
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: redis
+          mountPath: /data
+  # PVC
+  volumeClaimTemplates:
+  - metadata:
+      name: redis
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "flipkart-ebs"
+      resources:
+        requests:
+          storage: 1Gi

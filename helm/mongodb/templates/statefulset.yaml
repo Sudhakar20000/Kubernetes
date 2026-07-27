@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: flipkart
+  labels:
+    project: flipkart
+    tier: db
+    component: mongodb   
+spec:
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: db
+      component: mongodb
+  serviceName: "mongodb-headless"
+  replicas: {{ .Values.statefulset.replicas }}
+  template:
+    metadata: 
+      labels: 
+        project: flipkart
+        tier: db
+        component: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: "{{ .Values.statefulset.imageRepo }}:{{ .Values.statefulset.imageVersion}}"
+        volumeMounts:
+        - name: mongodb
+          mountPath: /data/db
+  # PVC
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "flipkart-ebs"
+      resources:
+        requests:
+          storage: 1Gi

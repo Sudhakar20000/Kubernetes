@@ -1,0 +1,9 @@
+configmap:
+  mysql_host: mysql
+  cart_endpoint: "cart:8080"
+deployment:
+  replicas: 1
+  imageRepo: sudhakar20000/shipping
+  imageVersion: v1
+hpa:
+  avgcpu: 50

@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment
+  namespace: flipkart
+  # labels related to deployment resource
+  labels:
+    project: flipkart
+    tier: backend
+    component: payment
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: backend
+      component: payment
+  # Pod
+  template:
+    metadata:
+      labels:
+        project: flipkart
+        tier: backend
+        component: payment
+    spec:
+      containers:
+      - name: payment
+        image: "{{ .Values.deployment.imageRepo }}:{{ .Values.deployment.imageVersion}}"
+        ports:
+        - name: liveness-port
+          containerPort: 8080
+        startupProbe:
+          httpGet:
+            path: /health
+            port: liveness-port
+            # we are giving 5 minutes to start the application
+          failureThreshold: 12
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: liveness-port
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: liveness-port
+          periodSeconds: 10
+        envFrom:
+        - configMapRef:
+            name: payment
+        - secretRef:
+            name: payment
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "100m"
+            memory: "128Mi"

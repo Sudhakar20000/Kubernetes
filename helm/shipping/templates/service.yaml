@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping
+  namespace: flipkart
+  # servicer labels
+  labels:
+    project: flipkart
+    tier: backend
+    component: shipping
+spec:
+  # Service uses the below labels to select the pods
+  selector:
+    project: flipkart
+    tier: backend
+    component: shipping
+  ports:
+    - protocol: TCP
+      port: 8080 # service port
+      targetPort: 8080 # container port

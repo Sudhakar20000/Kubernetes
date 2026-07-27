@@ -1,0 +1,4 @@
+statefulset:
+  imageRepo: sudhakar20000/mysql
+  imageVersion: v1
+  replicas: 1

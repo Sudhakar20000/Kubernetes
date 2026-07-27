@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+  namespace: flipkart
+  # labels related to deployment resource
+  labels:
+    project: flipkart
+    tier: db
+    component: rabbitmq
+spec:
+  serviceName: headless-rabbitmq
+  replicas: {{ Values.statefulset.replicas }}
+  selector:
+    matchLabels:
+      project: flipkart
+      tier: db
+      component: rabbitmq
+  # Pod
+  template:
+    metadata:
+      labels:
+        project: flipkart
+        tier: db
+        component: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:{{ Values.statefulset.imageVersion  }}
+        envFrom:
+        - secretRef:
+            name: rabbitmq
+        volumeMounts:
+          - name: rabbitmq
+            mountPath: /var/lib/rabbitmq
+  # PVC
+  volumeClaimTemplates:
+  - metadata:
+      name: rabbitmq
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "flipkart-ebs"
+      resources:
+        requests:
+          storage: 1Gi

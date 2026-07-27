@@ -1,0 +1,12 @@
+configmap:
+  catalogue_host: catalogue
+  cart_host: cart
+  user_host : user
+  shipping_host: shipping
+  payment_host: payment
+deployment:
+  imageRepo: sudhakar20000/frontend
+  imageVersion: v1
+  replicas: 1
+hpa:
+  averagecpu: 20
