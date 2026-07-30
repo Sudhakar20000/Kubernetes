@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: app-1
-        image: joindevops/app1
+        image: sudhakar20000/app1
         ports:
         - containerPort: 80
 ---
@@ -48,11 +48,11 @@ metadata:
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:129678139522:certificate/e3e72c65-449c-46f7-8192-71adc4b1c5d3
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/tags: Environment=dev,Team=test
-    alb.ingress.kubernetes.io/group.name: roboshop
+    alb.ingress.kubernetes.io/group.name: flipkart
 spec:
   ingressClassName: alb
   rules:
-  - host: "app1.daws90s.shop"
+  - host: "app1.sudhakar.shop"
     http:
       paths:
       - pathType: Prefix
