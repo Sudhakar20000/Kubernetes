@@ -39,7 +39,7 @@ module "eks" {
     blue = {
       # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
       ami_type       = "AL2023_x86_64_STANDARD"
-      instance_types = ["t3.small","t3.medium","t3.micro"]
+      instance_types = ["t3.small","t3.medium"]
       capacity_type = "SPOT"
 
       iam_role_additional_policies = {
@@ -47,8 +47,8 @@ module "eks" {
         EFS = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
       }
       min_size     = 2
-      max_size     = 2
-      desired_size = 2
+      max_size     = 5
+      desired_size = 3
 
       # This is required AWS LoadBalancerController
       metadata_options = {
