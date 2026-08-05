@@ -73,12 +73,12 @@ resource "aws_lb_listener_rule" "app1" {
 
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.frontend.arn
+    target_group_arn = aws_lb_target_group.app1.arn
   }
 
   condition {
     host_header {
-      values = ["app1-${var.environment}.${var.domain_name}"] # app1-dev.daws90s.shop
+      values = ["app1-${var.env}.${var.domain_name}"] # app1-dev.daws90s.shop
     }
   }
 }
@@ -114,7 +114,7 @@ resource "aws_lb_listener_rule" "app2" {
 
   condition {
     host_header {
-      values = ["app2-${var.environment}.${var.domain_name}"] # app2-dev.daws90s.shop
+      values = ["app2-${var.env}.${var.domain_name}"] # app2-dev.daws90s.shop
     }
   }
 }
